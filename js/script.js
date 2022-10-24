@@ -24,7 +24,9 @@ function setRandomColor() {
 
 function changeColor() {
   const startButton = document.getElementById("start-btn");
-  startButton.style.backgroundColor = setRandomColor();
+  if (startButton) {
+    startButton.style.backgroundColor = setRandomColor();
+  }
 }
 
 setInterval(changeColor, 500);
@@ -38,7 +40,7 @@ class Skier {
     this.width = 40;
     this.height = 55;
     this.x = this.canvas.width / 2 - this.width / 2;
-    this.y = this.canvas.height - 680;
+    this.y = this.canvas.height - 670;
   }
 
   bottomEdge() {
@@ -68,7 +70,7 @@ class Skier {
     this.x += 6;
   }
 
-  draw() {
+  display() {
     this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 }
@@ -86,10 +88,10 @@ class Slope {
   }
 
   move() {
-    this.y -= 2;
+    this.y -= 2.5;
     this.y %= this.canvas.height;
   }
-  draw() {
+  display() {
     this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     this.ctx.drawImage(
       this.image,
@@ -110,7 +112,8 @@ class Game {
     this.slope = new Slope(this.canvas, this.ctx);
     this.skier = new Skier(this.canvas, this.ctx);
     this.frames = 0;
-    this.obstacles = [];
+    this.gates = [];
+    this.gatePosition = ["left", "center", "right"];
   }
   init() {
     this.canvas = document.getElementById("canvas");
@@ -120,18 +123,26 @@ class Game {
   startGame() {
     this.intervalId = setInterval(() => {
       this.frames++;
-      if (this.frames % 60 === 0) {
-        this.obstacles.push(new Obstacle(this.canvas, this.ctx));
+      if (this.frames % 100 === 0) {
+        this.gates.push(
+          new Gate(
+            this.canvas,
+            this.ctx,
+            this.gatePosition[
+              Math.floor(Math.random() * this.gatePosition.length)
+            ]
+          )
+        );
       }
-      this.slope.draw();
+      this.slope.display();
       this.slope.move();
-      this.skier.draw();
-      for (const obstacle of this.obstacles) {
-        obstacle.draw();
-        if (this.checkCollision(obstacle, this.skier)) {
+      this.skier.display();
+      for (const gate of this.gates) {
+        gate.display();
+        if (this.checkCollision(gate, this.skier)) {
           this.stopGame();
         }
-        obstacle.move();
+        gate.move();
       }
     }, 1000 / 60);
   }
@@ -140,13 +151,13 @@ class Game {
     clearInterval(this.intervalId);
   }
 
-  checkCollision(obstacle, skier) {
+  checkCollision(gate, skier) {
     const isInX =
-      obstacle.rightEdge() >= skier.leftEdge() &&
-      obstacle.leftEdge() <= skier.rightEdge();
+      gate.rightEdge() >= skier.leftEdge() &&
+      gate.leftEdge() <= skier.rightEdge();
     const isInY =
-      obstacle.topEdge() <= skier.bottomEdge() &&
-      obstacle.bottomEdge() >= skier.topEdge();
+      gate.topEdge() <= skier.bottomEdge() &&
+      gate.bottomEdge() >= skier.topEdge();
     return isInX && isInY;
   }
 
@@ -166,14 +177,28 @@ class Game {
   }
 }
 
-/*class Obstacle {
-  constructor(canvas, ctx) {
-    this.ctx = ctx;
+class Gate {
+  constructor(canvas, ctx, position) {
+    this.image = new Image();
+    this.image.src = "./../images/gate.png";
     this.canvas = canvas;
-    this.x = Math.floor(Math.random() * (this.canvas.width / 2)) + 20;
-    this.width = Math.floor(Math.random() * (this.canvas.width / 2));
-    this.height = 15;
-    this.y = -20;
+    this.ctx = ctx;
+    this.width = 80;
+    this.height = 45;
+    this.x = 200;
+    this.y = this.canvas.height;
+    this.position = position;
+    this.changePosition();
+  }
+
+  changePosition() {
+    if (this.position === "left") {
+      this.x = 70;
+    } else if (this.position === "center") {
+      this.x = 220;
+    } else {
+      this.x = 350;
+    }
   }
 
   bottomEdge() {
@@ -190,12 +215,11 @@ class Game {
     return this.y;
   }
 
-  draw() {
-    this.ctx.fillStyle = "red";
-    this.ctx.fillRect(this.x, this.y, this.width, this.height);
+  display() {
+    this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
 
   move() {
-    this.y += 3;
+    this.y -= 2.5;
   }
-}*/
+}
