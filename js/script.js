@@ -1,13 +1,22 @@
-window.onload = () => {
-  document.getElementById("start-btn").onclick = () => {
-    const game = new Game();
-    game.startGame();
-    playSong();
-    deleteButton();
-  };
-};
+function goPlay() {
+  const game = new Game();
+  game.startGame();
+  playSong();
+  deleteStartButton();
+}
 
-function deleteButton() {
+/*
+function goPlayAgain() {
+  const game = new Game();
+  game.startGame();
+  playSong();
+  deleteTryAgainButton();
+}
+*/
+
+document.getElementById("start-btn").addEventListener("click", goPlay);
+
+function deleteStartButton() {
   const startButton = document.getElementById("start-btn");
   startButton.remove();
 }
@@ -22,14 +31,28 @@ function setRandomColor() {
   return "#" + Math.floor(Math.random() * 16789215).toString(16);
 }
 
-function changeColor() {
+function changeStartColor() {
   const startButton = document.getElementById("start-btn");
   if (startButton) {
     startButton.style.backgroundColor = setRandomColor();
   }
 }
+setInterval(changeStartColor, 500);
 
-setInterval(changeColor, 500);
+function changeTryAgainColor() {
+  const tryAgainBtn = document.querySelector("#restart-btn");
+  if (tryAgainBtn) {
+    tryAgainBtn.style.backgroundColor = setRandomColor();
+  }
+}
+setInterval(changeTryAgainColor, 500);
+
+/*
+function deleteTryAgainButton() {
+  const tryAgainBtn = document.querySelector("#restart-btn");
+  tryAgainBtn.remove();
+}
+*/
 
 class Skier {
   constructor(canvas, ctx) {
@@ -48,10 +71,10 @@ class Skier {
   }
 
   leftEdge() {
-    return this.x;
+    return this.x + parseInt(this.width * 0.2);
   }
   rightEdge() {
-    return this.x + this.width;
+    return this.x + this.width - parseInt(this.width * 0.2);
   }
   topEdge() {
     return this.y;
@@ -88,7 +111,7 @@ class Slope {
   }
 
   move() {
-    this.y -= 2.5;
+    this.y -= 2;
     this.y %= this.canvas.height;
   }
   display() {
@@ -139,7 +162,7 @@ class Game {
       this.skier.display();
       for (const gate of this.gates) {
         gate.display();
-        if (this.checkCollision(gate, this.skier)) {
+        if (!this.isSkierInTrack(gate, this.skier)) {
           this.stopGame();
         }
         gate.move();
@@ -149,12 +172,19 @@ class Game {
 
   stopGame() {
     clearInterval(this.intervalId);
+    const tryAgainBtn = document.querySelector("#restart-btn");
+    tryAgainBtn.classList.remove("hidden");
+    tryAgainBtn.style.backgroundColor = setRandomColor();
+    tryAgainBtn.addEventListener("click", goPlay);
   }
 
-  checkCollision(gate, skier) {
+  isSkierInTrack(gate, skier) {
+    if (skier.y !== gate.y) {
+      return true;
+    }
     const isInX =
-      gate.rightEdge() >= skier.leftEdge() &&
-      gate.leftEdge() <= skier.rightEdge();
+      gate.rightEdge() >= skier.rightEdge() &&
+      gate.leftEdge() <= skier.leftEdge();
     const isInY =
       gate.topEdge() <= skier.bottomEdge() &&
       gate.bottomEdge() >= skier.topEdge();
@@ -193,11 +223,11 @@ class Gate {
 
   changePosition() {
     if (this.position === "left") {
-      this.x = 70;
+      this.x = 100;
     } else if (this.position === "center") {
       this.x = 220;
     } else {
-      this.x = 350;
+      this.x = 320;
     }
   }
 
@@ -220,6 +250,6 @@ class Gate {
   }
 
   move() {
-    this.y -= 2.5;
+    this.y -= 2;
   }
 }
