@@ -5,15 +5,6 @@ function goPlay() {
   deleteStartButton();
 }
 
-/*
-function goPlayAgain() {
-  const game = new Game();
-  game.startGame();
-  playSong();
-  deleteTryAgainButton();
-}
-*/
-
 document.getElementById("start-btn").addEventListener("click", goPlay);
 
 function deleteStartButton() {
@@ -47,12 +38,12 @@ function changeTryAgainColor() {
 }
 setInterval(changeTryAgainColor, 500);
 
-/*
+const tryAgainBtn = document.querySelector("#restart-btn");
+tryAgainBtn.addEventListener("click", deleteTryAgainButton);
+
 function deleteTryAgainButton() {
-  const tryAgainBtn = document.querySelector("#restart-btn");
-  tryAgainBtn.remove();
+  tryAgainBtn.classList.add("hidden");
 }
-*/
 
 class Skier {
   constructor(canvas, ctx) {
