@@ -44,7 +44,7 @@ h1 {
   margin: 3rem 0 2rem 0;
 }
 
-#start-btn {
+#start-btn, #restart-btn, #winnerBtn {
   font-family: "arcade";
   font-size: 2.5rem;
   text-align: center;
@@ -60,19 +60,6 @@ h1 {
 #game-area {
   float: center;
   margin: 20px 0px;
-}
-
-#restart-btn {
-  font-family: "arcade";
-  font-size: 2.5rem;
-  text-align: center;
-  background-color: indigo;
-  color: #fff;
-  padding: 10px 30px 5px 35px;
-  border: 0;
-  box-shadow: 0;
-  border-radius: 10px;
-  margin-bottom: 2rem;
 }
 
 .hidden {

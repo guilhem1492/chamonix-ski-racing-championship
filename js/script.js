@@ -1,14 +1,20 @@
-//variables and EventListener
+//variables and start button EventListener
 
 const audio = new Audio();
 audio.src = "./../audio/undersea_palace.mp3";
 
-const startButton = document.getElementById("start-btn");
-changeColor(startButton);
-startButton.addEventListener("click", goPlay);
+const startBtn = document.getElementById("start-btn");
+startBtn.addEventListener("click", goPlay);
 
 const tryAgainBtn = document.querySelector("#restart-btn");
-changeColor(tryAgainBtn);
+
+const winnerBtn = document.querySelector("#winnerBtn");
+
+setInterval(() => {
+  changeColor(startBtn);
+  changeColor(tryAgainBtn);
+  changeColor(winnerBtn);
+}, 500);
 
 //reusable functions
 
@@ -19,11 +25,6 @@ function setRandomColor() {
 function changeColor(button) {
   button.style.backgroundColor = setRandomColor();
 }
-
-setInterval(() => {
-  changeColor(startButton);
-  changeColor(tryAgainBtn);
-}, 500);
 
 function deleteButton(button) {
   button.classList.add("hidden");
@@ -37,8 +38,9 @@ function goPlay() {
   const game = new Game();
   game.startGame();
   playSong();
-  deleteButton(startButton);
+  deleteButton(startBtn);
   deleteButton(tryAgainBtn);
+  deleteButton(winnerBtn);
 }
 
 //classes
@@ -123,6 +125,7 @@ class Game {
     this.init();
     this.slope = new Slope(this.canvas, this.ctx);
     this.skier = new Skier(this.canvas, this.ctx);
+    this.finishLine = null;
     this.frames = 0;
     this.gates = [];
     this.gatePosition = ["left", "center", "right"];
@@ -134,8 +137,11 @@ class Game {
   }
   startGame() {
     this.intervalId = setInterval(() => {
+      if (this.isSkierInFinish()) {
+        this.winGame();
+      }
       this.frames++;
-      if (this.frames % 100 === 0) {
+      if (!this.finishLine && this.frames % 100 === 0) {
         this.gates.push(
           new Gate(
             this.canvas,
@@ -145,6 +151,10 @@ class Game {
             ]
           )
         );
+      }
+      if (this.frames === 60 * 3) {
+        this.finishLine = new FinishLine(this.canvas, this.ctx);
+        console.log(this.finishLine);
       }
       this.slope.display();
       this.slope.move();
@@ -156,15 +166,23 @@ class Game {
         }
         gate.move();
       }
+      if (this.finishLine) {
+        this.finishLine.display();
+        this.finishLine.move();
+      }
     }, 1000 / 60);
   }
 
   stopGame() {
     clearInterval(this.intervalId);
-    const tryAgainBtn = document.querySelector("#restart-btn");
     tryAgainBtn.classList.remove("hidden");
-    tryAgainBtn.style.backgroundColor = setRandomColor();
     tryAgainBtn.addEventListener("click", goPlay);
+  }
+
+  winGame() {
+    clearInterval(this.intervalId);
+    winnerBtn.classList.remove("hidden");
+    winnerBtn.addEventListener("click", goPlay);
   }
 
   isSkierInTrack(gate, skier) {
@@ -178,6 +196,13 @@ class Game {
       gate.topEdge() <= skier.bottomEdge() &&
       gate.bottomEdge() >= skier.topEdge();
     return isInX && isInY;
+  }
+
+  isSkierInFinish() {
+    if (!this.finishLine) {
+      return false;
+    }
+    return this.skier.y > this.finishLine.y;
   }
 
   createEventListeners() {
@@ -232,6 +257,27 @@ class Gate {
   }
   topEdge() {
     return this.y;
+  }
+
+  display() {
+    this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+  }
+
+  move() {
+    this.y -= 2;
+  }
+}
+
+class FinishLine {
+  constructor(canvas, ctx) {
+    this.image = new Image();
+    this.image.src = "./../images/finish-line.png";
+    this.canvas = canvas;
+    this.ctx = ctx;
+    this.width = 400;
+    this.height = 40;
+    this.x = 50;
+    this.y = this.canvas.height;
   }
 
   display() {
