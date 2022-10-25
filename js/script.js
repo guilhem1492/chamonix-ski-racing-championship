@@ -1,49 +1,47 @@
-function goPlay() {
-  const game = new Game();
-  game.startGame();
-  playSong();
-  deleteStartButton();
-}
+//variables and EventListener
 
-document.getElementById("start-btn").addEventListener("click", goPlay);
+const audio = new Audio();
+audio.src = "./../audio/undersea_palace.mp3";
 
-function deleteStartButton() {
-  const startButton = document.getElementById("start-btn");
-  startButton.remove();
-}
+const startButton = document.getElementById("start-btn");
+changeColor(startButton);
+startButton.addEventListener("click", goPlay);
 
-function playSong() {
-  const audio = new Audio();
-  audio.src = "./../audio/undersea_palace.mp3";
-  audio.play();
-}
+const tryAgainBtn = document.querySelector("#restart-btn");
+changeColor(tryAgainBtn);
+
+//reusable functions
 
 function setRandomColor() {
   return "#" + Math.floor(Math.random() * 16789215).toString(16);
 }
 
-function changeStartColor() {
-  const startButton = document.getElementById("start-btn");
-  if (startButton) {
-    startButton.style.backgroundColor = setRandomColor();
-  }
+function changeColor(button) {
+  button.style.backgroundColor = setRandomColor();
 }
-setInterval(changeStartColor, 500);
 
-function changeTryAgainColor() {
-  const tryAgainBtn = document.querySelector("#restart-btn");
-  if (tryAgainBtn) {
-    tryAgainBtn.style.backgroundColor = setRandomColor();
-  }
+setInterval(() => {
+  changeColor(startButton);
+  changeColor(tryAgainBtn);
+}, 500);
+
+function deleteButton(button) {
+  button.classList.add("hidden");
 }
-setInterval(changeTryAgainColor, 500);
 
-const tryAgainBtn = document.querySelector("#restart-btn");
-tryAgainBtn.addEventListener("click", deleteTryAgainButton);
-
-function deleteTryAgainButton() {
-  tryAgainBtn.classList.add("hidden");
+function playSong() {
+  audio.play();
 }
+
+function goPlay() {
+  const game = new Game();
+  game.startGame();
+  playSong();
+  deleteButton(startButton);
+  deleteButton(tryAgainBtn);
+}
+
+//classes
 
 class Skier {
   constructor(canvas, ctx) {
