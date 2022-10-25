@@ -3,6 +3,12 @@
 const audio = new Audio();
 audio.src = "./../audio/undersea_palace.mp3";
 
+/*This one doesn't work due to DOM exception
+window.onload = (event) => {
+  audio.play();
+};
+*/
+
 const startBtn = document.getElementById("start-btn");
 startBtn.addEventListener("click", goPlay);
 
@@ -30,14 +36,10 @@ function deleteButton(button) {
   button.classList.add("hidden");
 }
 
-function playSong() {
-  audio.play();
-}
-
 function goPlay() {
   const game = new Game();
   game.startGame();
-  playSong();
+  audio.play();
   deleteButton(startBtn);
   deleteButton(tryAgainBtn);
   deleteButton(winnerBtn);
@@ -152,7 +154,7 @@ class Game {
           )
         );
       }
-      if (this.frames === 60 * 3) {
+      if (this.frames === 11050) {
         this.finishLine = new FinishLine(this.canvas, this.ctx);
         console.log(this.finishLine);
       }
@@ -175,12 +177,16 @@ class Game {
 
   stopGame() {
     clearInterval(this.intervalId);
+    audio.pause();
+    audio.currentTime = 0;
     tryAgainBtn.classList.remove("hidden");
     tryAgainBtn.addEventListener("click", goPlay);
   }
 
   winGame() {
     clearInterval(this.intervalId);
+    audio.pause();
+    audio.currentTime = 0;
     winnerBtn.classList.remove("hidden");
     winnerBtn.addEventListener("click", goPlay);
   }
