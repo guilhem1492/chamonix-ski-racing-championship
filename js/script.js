@@ -74,12 +74,14 @@ class Skier {
   }
 
   moveLeft() {
+    this.image.src = "./../images/turn-left.png";
     if (this.x <= 45) {
       return;
     }
     this.x -= 6;
   }
   moveRight() {
+    this.image.src = "./../images/turn-right.png";
     if (this.x >= this.canvas.width - this.width - 45) {
       return;
     }
@@ -223,6 +225,9 @@ class Game {
         default:
           break;
       }
+    });
+    document.addEventListener("keyup", (event) => {
+      this.skier.image.src = "./../images/skier.png";
     });
   }
 }
