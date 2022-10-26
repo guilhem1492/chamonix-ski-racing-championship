@@ -1,7 +1,7 @@
 //variables and start button EventListener
 
 const mainTheme = new Audio();
-mainTheme.src = "../audio/undersea_palace.mp3";
+mainTheme.src = "./audio/undersea_palace.mp3";
 
 /*This function doesn't work due to DOM exception
 
@@ -11,16 +11,16 @@ window.onload = (event) => {
 */
 
 const clickBtnSound = new Audio();
-clickBtnSound.src = "../audio/button-sound.mp3";
+clickBtnSound.src = "./audio/button-sound.mp3";
 
 const gameOverSound = new Audio();
-gameOverSound.src = "../audio/game-over-sound.mp3";
+gameOverSound.src = "./audio/game-over-sound.mp3";
 
 const winnerSound = new Audio();
-winnerSound.src = "../audio/victory-ff7.mp3";
+winnerSound.src = "./audio/victory-ff7.mp3";
 
 const skiTurnSound = new Audio();
-skiTurnSound.src = "../audio/ski-turn-sound.mp3";
+skiTurnSound.src = "./audio/ski-turn-sound.mp3";
 
 const startBtn = document.getElementById("start-btn");
 startBtn.addEventListener("click", goPlay);
@@ -94,7 +94,7 @@ function goPlay() {
 class Skier {
   constructor(canvas, ctx) {
     this.image = new Image();
-    this.image.src = "../images/skier.png";
+    this.image.src = "./images/skier.png";
     this.canvas = canvas;
     this.ctx = ctx;
     this.width = 40;
@@ -118,7 +118,7 @@ class Skier {
   }
 
   moveLeft() {
-    this.image.src = "../images/turn-left.png";
+    this.image.src = "./images/turn-left.png";
     skiTurnSound.play();
     if (this.x <= 45) {
       return;
@@ -126,7 +126,7 @@ class Skier {
     this.x -= 7;
   }
   moveRight() {
-    this.image.src = "../images/turn-right.png";
+    this.image.src = "./images/turn-right.png";
     skiTurnSound.play();
     if (this.x >= this.canvas.width - this.width - 45) {
       return;
@@ -142,7 +142,7 @@ class Skier {
 class Slope {
   constructor(canvas, ctx) {
     this.image = new Image();
-    this.image.src = "../images/snow.png";
+    this.image.src = "./images/snow.png";
     this.ctx = ctx;
     this.canvas = canvas;
     this.x = 0;
@@ -279,7 +279,7 @@ class Game {
       }
     });
     document.addEventListener("keyup", (event) => {
-      this.skier.image.src = "../images/skier.png";
+      this.skier.image.src = "./images/skier.png";
     });
   }
 }
@@ -287,7 +287,7 @@ class Game {
 class Gate {
   constructor(canvas, ctx, position) {
     this.image = new Image();
-    this.image.src = "../images/gate.png";
+    this.image.src = "./images/gate.png";
     this.canvas = canvas;
     this.ctx = ctx;
     this.width = 70;
@@ -334,7 +334,7 @@ class Gate {
 class FinishLine {
   constructor(canvas, ctx) {
     this.image = new Image();
-    this.image.src = "../images/finish-line.png";
+    this.image.src = "./images/finish-line.png";
     this.canvas = canvas;
     this.ctx = ctx;
     this.width = 400;
