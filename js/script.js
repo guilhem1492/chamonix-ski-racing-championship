@@ -1,13 +1,25 @@
 //variables and start button EventListener
 
-const audio = new Audio();
-audio.src = "./../audio/undersea_palace.mp3";
+const mainTheme = new Audio();
+mainTheme.src = "./../audio/undersea_palace.mp3";
 
-/*This one doesn't work due to DOM exception
+/*This function doesn't work due to DOM exception
 window.onload = (event) => {
-  audio.play();
+  mainTheme.play();
 };
 */
+
+const clickBtnSound = new Audio();
+clickBtnSound.src = "./../audio/button-sound.mp3";
+
+const gameOverSound = new Audio();
+gameOverSound.src = "./../audio/game-over-sound.mp3";
+
+const winnerSound = new Audio();
+winnerSound.src = "./../audio/victory-ff7.mp3";
+
+const skiTurnSound = new Audio();
+skiTurnSound.src = "./../audio/ski-turn-sound.mp3";
 
 const startBtn = document.getElementById("start-btn");
 startBtn.addEventListener("click", goPlay);
@@ -39,10 +51,13 @@ function deleteButton(button) {
 function goPlay() {
   const game = new Game();
   game.startGame();
-  audio.play();
+  clickBtnSound.play();
+  mainTheme.play();
   deleteButton(startBtn);
   deleteButton(tryAgainBtn);
   deleteButton(winnerBtn);
+  winnerSound.pause();
+  winnerSound.currentTime = 0;
 }
 
 //classes
@@ -64,10 +79,10 @@ class Skier {
   }
 
   leftEdge() {
-    return this.x + parseInt(this.width * 0.2);
+    return this.x + parseInt(this.width * 0.3);
   }
   rightEdge() {
-    return this.x + this.width - parseInt(this.width * 0.2);
+    return this.x + this.width - parseInt(this.width * 0.3);
   }
   topEdge() {
     return this.y;
@@ -75,17 +90,19 @@ class Skier {
 
   moveLeft() {
     this.image.src = "./../images/turn-left.png";
+    skiTurnSound.play();
     if (this.x <= 45) {
       return;
     }
-    this.x -= 6;
+    this.x -= 7;
   }
   moveRight() {
     this.image.src = "./../images/turn-right.png";
+    skiTurnSound.play();
     if (this.x >= this.canvas.width - this.width - 45) {
       return;
     }
-    this.x += 6;
+    this.x += 7;
   }
 
   display() {
@@ -106,7 +123,7 @@ class Slope {
   }
 
   move() {
-    this.y -= 2;
+    this.y -= 2.5;
     this.y %= this.canvas.height;
   }
   display() {
@@ -179,16 +196,18 @@ class Game {
 
   stopGame() {
     clearInterval(this.intervalId);
-    audio.pause();
-    audio.currentTime = 0;
+    mainTheme.pause();
+    mainTheme.currentTime = 0;
+    gameOverSound.play();
     tryAgainBtn.classList.remove("hidden");
     tryAgainBtn.addEventListener("click", goPlay);
   }
 
   winGame() {
     clearInterval(this.intervalId);
-    audio.pause();
-    audio.currentTime = 0;
+    mainTheme.pause();
+    mainTheme.currentTime = 0;
+    winnerSound.play();
     winnerBtn.classList.remove("hidden");
     winnerBtn.addEventListener("click", goPlay);
   }
@@ -238,8 +257,8 @@ class Gate {
     this.image.src = "./../images/gate.png";
     this.canvas = canvas;
     this.ctx = ctx;
-    this.width = 80;
-    this.height = 45;
+    this.width = 70;
+    this.height = 40;
     this.x = 200;
     this.y = this.canvas.height;
     this.position = position;
@@ -248,11 +267,11 @@ class Gate {
 
   changePosition() {
     if (this.position === "left") {
-      this.x = 100;
+      this.x = 70;
     } else if (this.position === "center") {
       this.x = 220;
     } else {
-      this.x = 320;
+      this.x = 350;
     }
   }
 
@@ -275,7 +294,7 @@ class Gate {
   }
 
   move() {
-    this.y -= 2;
+    this.y -= 2.5;
   }
 }
 
@@ -296,6 +315,6 @@ class FinishLine {
   }
 
   move() {
-    this.y -= 2;
+    this.y -= 2.5;
   }
 }
