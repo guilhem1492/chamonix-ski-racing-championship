@@ -1,25 +1,26 @@
 //variables and start button EventListener
 
 const mainTheme = new Audio();
-mainTheme.src = "./../audio/undersea_palace.mp3";
+mainTheme.src = "../audio/undersea_palace.mp3";
 
 /*This function doesn't work due to DOM exception
+
 window.onload = (event) => {
   mainTheme.play();
 };
 */
 
 const clickBtnSound = new Audio();
-clickBtnSound.src = "./../audio/button-sound.mp3";
+clickBtnSound.src = "../audio/button-sound.mp3";
 
 const gameOverSound = new Audio();
-gameOverSound.src = "./../audio/game-over-sound.mp3";
+gameOverSound.src = "../audio/game-over-sound.mp3";
 
 const winnerSound = new Audio();
-winnerSound.src = "./../audio/victory-ff7.mp3";
+winnerSound.src = "../audio/victory-ff7.mp3";
 
 const skiTurnSound = new Audio();
-skiTurnSound.src = "./../audio/ski-turn-sound.mp3";
+skiTurnSound.src = "../audio/ski-turn-sound.mp3";
 
 const startBtn = document.getElementById("start-btn");
 startBtn.addEventListener("click", goPlay);
@@ -28,11 +29,33 @@ const tryAgainBtn = document.querySelector("#restart-btn");
 
 const winnerBtn = document.querySelector("#winnerBtn");
 
+let timerId = null;
+
 setInterval(() => {
   changeColor(startBtn);
   changeColor(tryAgainBtn);
   changeColor(winnerBtn);
 }, 500);
+
+//adding timer
+
+const timerClock = document.getElementById("timer");
+
+function setTimer() {
+  let startMinutes = 3;
+  let time = startMinutes * 60;
+  timerClock.textContent = `03:00 remaining before the finish line!`;
+  timerId = setInterval(() => {
+    let minutes = parseInt(time / 60, 10);
+    let seconds = parseInt(time % 60, 10);
+
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    timerClock.textContent = `${minutes}:${seconds} remaining before the finish line!`;
+    time = time <= 0 ? 0 : time - 1;
+  }, 1000);
+}
 
 //reusable functions
 
@@ -48,6 +71,10 @@ function deleteButton(button) {
   button.classList.add("hidden");
 }
 
+function displayButton(button) {
+  button.classList.remove("hidden");
+}
+
 function goPlay() {
   const game = new Game();
   game.startGame();
@@ -56,8 +83,10 @@ function goPlay() {
   deleteButton(startBtn);
   deleteButton(tryAgainBtn);
   deleteButton(winnerBtn);
+  displayButton(timerClock);
   winnerSound.pause();
   winnerSound.currentTime = 0;
+  setTimer();
 }
 
 //classes
@@ -65,7 +94,7 @@ function goPlay() {
 class Skier {
   constructor(canvas, ctx) {
     this.image = new Image();
-    this.image.src = "./../images/skier.png";
+    this.image.src = "../images/skier.png";
     this.canvas = canvas;
     this.ctx = ctx;
     this.width = 40;
@@ -89,7 +118,7 @@ class Skier {
   }
 
   moveLeft() {
-    this.image.src = "./../images/turn-left.png";
+    this.image.src = "../images/turn-left.png";
     skiTurnSound.play();
     if (this.x <= 45) {
       return;
@@ -97,7 +126,7 @@ class Skier {
     this.x -= 7;
   }
   moveRight() {
-    this.image.src = "./../images/turn-right.png";
+    this.image.src = "../images/turn-right.png";
     skiTurnSound.play();
     if (this.x >= this.canvas.width - this.width - 45) {
       return;
@@ -113,7 +142,7 @@ class Skier {
 class Slope {
   constructor(canvas, ctx) {
     this.image = new Image();
-    this.image.src = "./../images/snow.png";
+    this.image.src = "../images/snow.png";
     this.ctx = ctx;
     this.canvas = canvas;
     this.x = 0;
@@ -199,7 +228,9 @@ class Game {
     mainTheme.pause();
     mainTheme.currentTime = 0;
     gameOverSound.play();
-    tryAgainBtn.classList.remove("hidden");
+    clearInterval(timerId);
+    deleteButton(timerClock);
+    displayButton(tryAgainBtn);
     tryAgainBtn.addEventListener("click", goPlay);
   }
 
@@ -208,7 +239,9 @@ class Game {
     mainTheme.pause();
     mainTheme.currentTime = 0;
     winnerSound.play();
-    winnerBtn.classList.remove("hidden");
+    clearInterval(timerId);
+    deleteButton(timerClock);
+    displayButton(winnerBtn);
     winnerBtn.addEventListener("click", goPlay);
   }
 
@@ -246,7 +279,7 @@ class Game {
       }
     });
     document.addEventListener("keyup", (event) => {
-      this.skier.image.src = "./../images/skier.png";
+      this.skier.image.src = "../images/skier.png";
     });
   }
 }
@@ -254,7 +287,7 @@ class Game {
 class Gate {
   constructor(canvas, ctx, position) {
     this.image = new Image();
-    this.image.src = "./../images/gate.png";
+    this.image.src = "../images/gate.png";
     this.canvas = canvas;
     this.ctx = ctx;
     this.width = 70;
@@ -267,11 +300,11 @@ class Gate {
 
   changePosition() {
     if (this.position === "left") {
-      this.x = 70;
+      this.x = 80;
     } else if (this.position === "center") {
       this.x = 220;
     } else {
-      this.x = 350;
+      this.x = 340;
     }
   }
 
@@ -301,7 +334,7 @@ class Gate {
 class FinishLine {
   constructor(canvas, ctx) {
     this.image = new Image();
-    this.image.src = "./../images/finish-line.png";
+    this.image.src = "../images/finish-line.png";
     this.canvas = canvas;
     this.ctx = ctx;
     this.width = 400;
