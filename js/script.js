@@ -300,7 +300,7 @@ class Gate {
 
   changePosition() {
     if (this.position === "left") {
-      this.x = 80;
+      this.x = 90;
     } else if (this.position === "center") {
       this.x = 220;
     } else {
