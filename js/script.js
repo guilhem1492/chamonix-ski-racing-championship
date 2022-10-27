@@ -29,8 +29,6 @@ const tryAgainBtn = document.querySelector("#restart-btn");
 
 const winnerBtn = document.querySelector("#winnerBtn");
 
-let timerId = null;
-
 setInterval(() => {
   changeColor(startBtn);
   changeColor(tryAgainBtn);
@@ -38,6 +36,8 @@ setInterval(() => {
 }, 500);
 
 //adding timer
+
+let timerId = null;
 
 const timerClock = document.getElementById("timer");
 
@@ -167,6 +167,23 @@ class Slope {
   }
 }
 
+class WinnerGift {
+  constructor(canvas, ctx) {
+    this.image = new Image();
+    this.image.src = "./images/lange-girl-1975.png";
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.x = 50;
+    this.y = 250;
+    this.width = 400;
+    this.height = 254;
+  }
+  display() {
+    console.log(this.image, this.x, this.y, this.width, this.height);
+    this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+  }
+}
+
 class Game {
   constructor() {
     this.canvas = null;
@@ -175,6 +192,7 @@ class Game {
     this.init();
     this.slope = new Slope(this.canvas, this.ctx);
     this.skier = new Skier(this.canvas, this.ctx);
+    this.winnerGift = new WinnerGift(this.canvas, this.ctx);
     this.finishLine = null;
     this.frames = 0;
     this.gates = [];
@@ -189,6 +207,7 @@ class Game {
     this.intervalId = setInterval(() => {
       if (this.isSkierInFinish()) {
         this.winGame();
+        return;
       }
       this.frames++;
       if (!this.finishLine && this.frames % 100 === 0) {
@@ -204,7 +223,7 @@ class Game {
       }
       if (this.frames === 11050) {
         this.finishLine = new FinishLine(this.canvas, this.ctx);
-        console.log(this.finishLine);
+        //console.log(this.finishLine);
       }
       this.slope.display();
       this.slope.move();
@@ -213,6 +232,7 @@ class Game {
         gate.display();
         if (!this.isSkierInTrack(gate, this.skier)) {
           this.stopGame();
+          return;
         }
         gate.move();
       }
@@ -242,6 +262,7 @@ class Game {
     clearInterval(timerId);
     deleteButton(timerClock);
     displayButton(winnerBtn);
+    this.winnerGift.display();
     winnerBtn.addEventListener("click", goPlay);
   }
 
@@ -300,11 +321,11 @@ class Gate {
 
   changePosition() {
     if (this.position === "left") {
-      this.x = 90;
+      this.x = 85;
     } else if (this.position === "center") {
       this.x = 220;
     } else {
-      this.x = 340;
+      this.x = 350;
     }
   }
 
