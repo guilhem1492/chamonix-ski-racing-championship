@@ -13,8 +13,7 @@ This implementation uses the following:
 
 - 6 classes to build the moving images, the game area and its logic.
 - An empty array where the gates positions are pushed randomly from another array of three strings: "left", "center" and "right".
-- A class method who detects if the skier's y axis doesn't equal the gate y axis, so that the game continue if the skier is passing on the gates and stops if not.
-- Click, keydown and keyup EventListeners.
+- A class method who detects if the skier's y axis doesn't equal the gate y axis. If the y is the same, the skier has to pass inside the gates otherwise the game stops.
 - A reusable function starting and restarting the game, deleting the unncessary buttons, resetting the timer to three minutes and the main audio theme current time to zero.
 
 # Possible improvements
