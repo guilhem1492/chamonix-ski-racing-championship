@@ -101,6 +101,7 @@ class Skier {
     this.height = 55;
     this.x = this.canvas.width / 2 - this.width / 2;
     this.y = this.canvas.height - 670;
+    this.direction = null;
   }
 
   bottomEdge() {
@@ -117,13 +118,21 @@ class Skier {
     return this.y;
   }
 
+  move() {
+    if (this.direction === "left") {
+      this.moveLeft();
+    } else if (this.direction === "right") {
+      this.moveRight();
+    }
+  }
+
   moveLeft() {
     this.image.src = "./images/turn-left.png";
     skiTurnSound.play();
     if (this.x <= 45) {
       return;
     }
-    this.x -= 7;
+    this.x -= 2.5;
   }
   moveRight() {
     this.image.src = "./images/turn-right.png";
@@ -131,7 +140,7 @@ class Skier {
     if (this.x >= this.canvas.width - this.width - 45) {
       return;
     }
-    this.x += 7;
+    this.x += 2.5;
   }
 
   display() {
@@ -227,6 +236,7 @@ class Game {
       }
       this.slope.display();
       this.slope.move();
+      this.skier.move(); //here
       this.skier.display();
       for (const gate of this.gates) {
         gate.display();
@@ -290,17 +300,18 @@ class Game {
     document.addEventListener("keydown", (event) => {
       switch (event.key) {
         case "ArrowLeft":
-          this.skier.moveLeft();
+          this.skier.direction = "left";
           break;
         case "ArrowRight":
-          this.skier.moveRight();
+          this.skier.direction = "right";
           break;
         default:
-          break;
+          this.skier.direction = null;
       }
     });
     document.addEventListener("keyup", (event) => {
       this.skier.image.src = "./images/skier.png";
+      this.skier.direction = null;
     });
   }
 }
