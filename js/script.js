@@ -118,6 +118,8 @@ class Skier {
     return this.y;
   }
 
+  /*This method fixes the problem of the skier's moves 
+    speed on different keyboards.*/
   move() {
     if (this.direction === "left") {
       this.moveLeft();
@@ -236,7 +238,7 @@ class Game {
       }
       this.slope.display();
       this.slope.move();
-      this.skier.move(); //here
+      this.skier.move();
       this.skier.display();
       for (const gate of this.gates) {
         gate.display();

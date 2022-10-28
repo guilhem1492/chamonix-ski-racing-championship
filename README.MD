@@ -21,6 +21,8 @@ This implementation uses the following:
 - The window.onload audio play function doesn't work due to DOM exception.
 - The difficulty level could be lowered or increased on demand (settings og the frames speed and the gates's spacing).
 - Adding a counter increasing after every gate passed by the skier, so the player get a scoring.
+- Adding a mute button.
+- Make the game playable on mobile with a touch keyboard.
 
 # Sources and credits
 

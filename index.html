@@ -9,7 +9,11 @@
     <title>Chamonix Ski Racing Championship 2022</title>
   </head>
   <body>
-    <div class="game-presentation">
+    <div id="game-area">
+      <canvas id="canvas" width="500" height="700"></canvas>
+    </div>
+
+    <div id="game-presentation">
       <h1>
         Chamonix Ski Racing<br />
         Championship 2022
@@ -25,15 +29,11 @@
         a Chamonix ski legend!<br />
         Retire or keep playing!
       </button>
-      <p id="timer" class="hidden"></p>
+      <button id="timer" class="hidden"></button>
       <p>
         Use &#8592; and &#8594; on your keyboard<br />
         to drive the skier through the gates!
       </p>
-    </div>
-
-    <div id="game-area">
-      <canvas id="canvas" width="500" height="700"></canvas>
     </div>
   </body>
 </html>
