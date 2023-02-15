@@ -1,4 +1,4 @@
-# Chamonix Ski Racing Championship 2022
+# Chamonix Ski Racing Championship
 
 A ski racing simulation based on HTML canvas, using: HTML, CSS, and JavaScript. This is the first of the three projects of my Ironhack WebDev Bootcamp (fall 2022).
 The player must drive the skier through the gates. The entire run to victory lasts 3 minutes. The timer displays the time remaining before the finish line. If the player miss a gate, the game is over. She or he can try again with one click.
